@@ -34,9 +34,12 @@ Adjust the configurable parameters as instructed below, add it to your `crontab`
 read -r ipsetname domain <<<$(echo "IPSET-NAME-HERE" "DOMAIN-NAME-HERE") && read -a subdomains <<< "SUB1 SUB2 SUB3"
 ```
 Replace the following variables with your own names:
-1. `IPSET-NAME-HERE`           | Name of the `ipset` used specifically for your whitelisted hosts. Doesn't matter what it is but use a name you'll recognize.
-2. `DOMAIN-NAME-HERE`          | The script is simple and assumes you'll connect from a single domain... but you can use as many subdomains as you like. See below.
-3. `SUB1` / `SUB2` / `SUB3`    | Set these to match *only the subdomain portion* of your whitelisted hostnames. If you don't need more than one, just delete the excess.
+
+| Variable                 | Description                                                                                                                             |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `IPSET-NAME-HERE`        | Name of the `ipset` used specifically for your whitelisted hosts. Doesn't matter what it is but use a name you'll recognize.            |
+| `DOMAIN-NAME-HERE`       | The script is simple and assumes you'll connect from a single domain... but you can use as many subdomains as you like. See below.      |
+| `SUB1` / `SUB2` / `SUB3` | Set these to match *only the subdomain portion* of your whitelisted hostnames. If you don't need more than one, just delete the excess. |
 
 ## Logging
 
