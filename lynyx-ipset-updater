@@ -3,7 +3,7 @@
 # Version: 1.0
 # Updated: 2022-10-29 19:30 EDT
 # Created: 2022-10-29 17:05 EDT
-# Author: EnzanNoMetsuke <EnzanNoMetsuke@users.noreply.github.com>
+# Author: EnzanNoMetsuke <3458546+EnzanNoMetsuke@users.noreply.github.com>
 # Description: Bash script for resolving hostnames with dynamic DNS & updates IPs via ipset to whitelist in iptables.
 # Note: Designed for use in crontab; requires root in order to access ipset.
 
