@@ -29,6 +29,10 @@ If you've ever wanted to do the following in `iptables` but for hostnames with d
 
 Adjust the configurable parameters as instructed below, add it to your `crontab` (e.g. every 5 min), and you're done!
 
+**Example:**
+`*/5 * * * * lynyx-ipset-updater >> /var/log/lynyx-custom-tools/lynyx-ipset-updater.log 2>&1`
+This runs every 5 minutes and redirects console output to a log file.
+
 ## Configurable Parameters
 
 ```bash
