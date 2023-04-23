@@ -6,7 +6,7 @@ If you're not already using `iptables` as a firewall, and/or dynamic DNS, then y
 
 ## Word of Caution
 
-The script immediately flushes the `ipset` after resolving configured hostnames to keep it clean of stale entries. However, if you run this on any of your servers with a large amount of time between executions, you'll need to either run it more frequently (I use every 5 minutes in `crontab`) or manually check the whitelist regularly & remove stale entries for IPs from which you no longer connect. 
+The script immediately flushes the `ipset` after resolving configured hostnames to keep it clean of stale entries. However, if you run this on any of your servers with a large amount of time between executions, you'll need to either run it more frequently (I use every 5 minutes in `crontab`) or manually check the whitelist regularly & remove stale entries for IPs from which you no longer connect.
 
 ***Note that connecting to your server from a public network like a cafe or library while using this utility can create significant security risks. Use your brain.***
 
