@@ -5,7 +5,7 @@
 # Author: EnzanNoMetsuke <3458546+EnzanNoMetsuke@users.noreply.github.com>
 # Description: Bash script for resolving hostnames with dynamic DNS & updates IPs via ipset to whitelist in iptables.
 # Note: Designed for use in crontab; requires root in order to access ipset.
-`
+
 # Functions for resolving hosts & working with ipset
 resolve_cmd() { dig +short "$1"; }
 ipsetflush_cmd() { ipset flush "$ipsetname"; }
