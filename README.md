@@ -20,6 +20,7 @@ The script immediately flushes the `ipset` after resolving configured hostnames 
 ## Use Cases
 
 If you've ever wanted to do the following in `iptables` but for hostnames with dynamic IPs, you've come to the right place.
+
 - Whitelisting
 - Blacklisting
 - Routing rules
@@ -31,21 +32,22 @@ Adjust the configurable parameters as instructed below, add it to your `crontab`
 ## Configurable Parameters
 
 ```bash
-read -r ipsetname domain <<<$(echo "IPSET-NAME-HERE" "DOMAIN-NAME-HERE") && read -a subdomains <<< "SUB1 SUB2 SUB3"
+read -r ipsetname domain <<<$(echo "${LIU_IPSET_NAME}" "${LIU_DOMAIN}") && read -a subdomains <<< "${LIU_SUB1} ${LIU_SUB2} ${LIU_SUB3}"
 ```
-Replace the following variables with your own names:
 
-| Variable                 | Description                                                                                                                             |
-| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `IPSET-NAME-HERE`        | Name of the `ipset` used specifically for your whitelisted hosts. Doesn't matter what it is but use a name you'll recognize.            |
-| `DOMAIN-NAME-HERE`       | The script is simple and assumes you'll connect from a single domain... but you can use as many subdomains as you like. See below.      |
-| `SUB1` / `SUB2` / `SUB3` | Set these to match *only the subdomain portion* of your whitelisted hostnames. If you don't need more than one, just delete the excess. |
+Set the environment variables with your desired values according to the guide below. Don't forget to add them to your/root's .*rc file so they persist.
+
+| Variable                              | Description                                                                                                                             |
+| ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `LIU_IPSET_NAME`                      | Name of the `ipset` used specifically for your whitelisted hosts. Doesn't matter what it is but use a name you'll recognize.            |
+| `LIU_DOMAIN`                          | The script is simple and assumes you'll connect from a single domain... but you can use as many subdomains as you like. See below.      |
+| `LIU_SUB1` / `LIU_SUB2` / `LIU_SUB3`  | Set these to match *only the subdomain portion* of your whitelisted hostnames. If you don't need more than one, just delete the excess. |
 
 ## Logging
 
 The script logs its activity. The log format is:
 
-```
+```text
 [timestamp] | [logger] | [status] | [message]
 ```
 
