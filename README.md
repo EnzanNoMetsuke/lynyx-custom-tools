@@ -2,13 +2,13 @@
 
 *IPSet Updater* is a Bash script designed to resolve hostnames with dynamic DNS and update IPs via `ipset` to whitelist in `iptables`. The net result is that you're effectively able to whitelist by hostname, which is quite helpful for clients with dynamic IPs. A good use case for this is locking down a Web server's SSH access by using `iptables` as a firewall, while having the ability to allow the legitimate owner of the server to access it via whitelist. By monitoring the result of resolving our dynamic DNS hostname(s), we get the IP(s) that must be whitelisted for access.
 
-If you're not already using `iptables` as a firewall, and/or dynamic DNS, then you probably won't get much use out of this script.
+If you're not already using `iptables` as a firewall nor dynamic DNS and have no wish to start, then you probably won't get much use out of this script.
 
 > **Word of Caution**
 >
 > The script immediately flushes the `ipset` after resolving configured hostnames to keep it clean of stale entries. However, if you run this on any of your servers with a large amount of time between executions, you'll need to either run it more frequently (I use every 5 minutes in `crontab`) or manually check the whitelist regularly & remove stale entries for IPs from which you no longer connect.
 >
-> ***Note that connecting to your server from an untrusted/public network like a cafe or library while using this utility can create significant security risks. Use your brain.***
+> ***Note that connecting to your server from an untrusted/public network like a cafe or library while using this utility can create significant security risks.*** *Use your brain.*
 
 ## Features
 
@@ -64,7 +64,7 @@ Add the script to crontab. This example runs every 5 minutes and redirects conso
 
 All done. Sit back and let the magic happen.
 
-~[Relax & enjoy a cup of coffee.](https://images.unsplash.com/photo-1528962862197-29c4f24ccc04?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80)
+![Relax & enjoy a cup of coffee.](https://images.unsplash.com/photo-1528962862197-29c4f24ccc04?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80 "Photo Credit: Alessandro Bianchi")
 
 ## Configurable Parameters
 
