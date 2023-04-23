@@ -44,10 +44,10 @@ Assuming a restrictive firewall is already in place via `iptables`, add the foll
 -A INPUT -p tcp -m tcp --dport 22 -m set --match-set my-whitelist src -j ACCEPT
 ```
 
-Set the environment variables while adding to .bashrc for persistence.
+Set the environment variables while adding to a new `.liu_bashrc` for persistence with `crontab`.
 
 ```bash
-cat << EOF >> ~/.bashrc
+cat << EOF >> ~/.liu_bashrc
 > export LIU_IPSET_NAME="my-whitelist"
 > export LIU_DOMAIN="dyndns.com"
 > export LIU_SUB1="alpha"
@@ -59,12 +59,12 @@ cat << EOF >> ~/.bashrc
 Add the script to crontab. This example runs every 5 minutes and redirects console output to a log file. Logging is optional but recommended.
 
 ```bash
-*/5 * * * * lynyx-ipset-updater >> /var/log/lynyx-custom-tools/lynyx-ipset-updater.log 2>&1`
+*/5 * * * * BASH_ENV=/root/lynyx-custom-tools/.liu_bashrc /root/lynyx-custom-tools/lynyx-ipset-updater >> /var/log/lynyx-custom-tools/lynyx-ipset-updater.log 2>&1`
 ```
 
 All done. Sit back and let the magic happen.
 
-![Relax & enjoy a cup of coffee.](https://images.unsplash.com/photo-1528962862197-29c4f24ccc04?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80 "Photo Credit: Alessandro Bianchi")
+![Relax & enjoy a cup of coffee.](alessandro-bianchi-3kKLU4-UUbU-unsplash.jpg?raw=true "Photo Credit: Alessandro Bianchi")
 
 ## Configurable Parameters
 
