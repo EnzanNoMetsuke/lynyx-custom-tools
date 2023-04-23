@@ -56,7 +56,7 @@ cat << EOF >> ~/.bashrc
 > EOF
 ```
 
-Add the script to crontab. This example runs every 5 minutes and redirects console output to a log file. Logging is optional.
+Add the script to crontab. This example runs every 5 minutes and redirects console output to a log file. Logging is optional but recommended.
 
 ```bash
 */5 * * * * lynyx-ipset-updater >> /var/log/lynyx-custom-tools/lynyx-ipset-updater.log 2>&1`
