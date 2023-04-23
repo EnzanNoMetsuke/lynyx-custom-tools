@@ -1,49 +1,75 @@
 #!/bin/bash
 
 # Version: 1.0
-# Updated: 2022-10-29 19:30 EDT
 # Created: 2022-10-29 17:05 EDT
 # Author: EnzanNoMetsuke <3458546+EnzanNoMetsuke@users.noreply.github.com>
 # Description: Bash script for resolving hostnames with dynamic DNS & updates IPs via ipset to whitelist in iptables.
 # Note: Designed for use in crontab; requires root in order to access ipset.
 
+# Functions for resolving hosts & working with ipset
+resolve_cmd() { dig +short "$1"; }
+ipsetflush_cmd() { ipset flush "$ipsetname"; }
+ipsetadd_cmd() { ipset add "$ipsetname" "$1"; }
+ipsetlist_cmd() { ipset list "$ipsetname"; }
+
 # CONFIGURABLE PARAMETERS
-read -r ipsetname domain <<<$(echo "IPSET-NAME-HERE" "DOMAIN-NAME-HERE") && read -a subdomains <<< "SUB1 SUB2 SUB3"
+read -r ipsetname domain <<< "$(echo ${LIU_IPSET_NAME} ${LIU_DOMAIN})" 
+read -a subdomains <<< "${LIU_SUB1} ${LIU_SUB2}"
 
 # Initialize
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-read -r logtime logger status <<<$(echo $(date +%Y-%m-%d" "%H:%M:%S"."%3N) "lynyx-ipset-updater" "INITIALIZED")
+read -r logtime logger status <<< "$(date +%Y-%m-%d" "%H:%M:%S"."%3N) lynyx-ipset-updater INITIALIZED"
 
 # Start logging
 echo "$logtime | $logger | $status"
 
-# Functions for resolving hosts & working with ipset
-resolve_cmd() { dig +short $1; }
-ipsetflush_cmd() { ipset flush $ipsetname; }
-ipsetadd_cmd() { ipset add $ipsetname $1; }
-ipsetlist_cmd() { ipset list $ipsetname; }
-
 # Build an array of fully qualified hostnames
-for sub in "${subdomains[@]}"; do hosts+=($sub"."$domain) && log_info_hosts+="$sub.$domain, "; done
+for sub in "${subdomains[@]}"; do 
+  hosts+=("$sub.$domain")
+  log_info_hosts+="$sub.$domain, "
+done
 log_info_hosts=${log_info_hosts::-2}
-read -r status msg <<<$(echo "INFO" "Hosts: "$log_info_hosts) && echo "$logtime | $logger | $status | $msg"
+read -r status msg <<< "INFO Hosts: ${log_info_hosts}" && echo "$logtime | $logger | $status | $msg"
 
 # Flush the current IP set
-if ipsetflush_cmd; then read -r status msg <<<$(echo "PASS" "[ $ipsetname ] Flush successful") && echo "$logtime | $logger | $status $msg"; else
-	read -r status msg <<<$(echo "ERROR" "Exiting... command failure: ipset flush $ipsetname") && echo "$logtime | $logger | $status | $msg" && exit $?;
+if ipsetflush_cmd; then 
+  read -r status msg <<< "PASS [ $ipsetname ] Flush successful" 
+  echo "$logtime | $logger | $status $msg"
+else
+  read -r status msg <<< "ERROR Exiting... command failure: ipset flush $ipsetname" 
+  echo "$logtime | $logger | $status | $msg" 
+  exit $?
 fi
 
 # Resolve our array of hosts and add each IP to the set
 for host in "${hosts[@]}"; do
-	while ! ip=$(resolve_cmd "$host") || [[ -z ip ]]; do read -r status msg <<<$(echo "ERROR" "Exiting... command failure: dig +short $host") && echo "$logtime | $logger | $status | $msg" && exit $?; done
-	while ! $(ipsetadd_cmd "$ip"); do read -r status msg <<<$(echo "ERROR" "Exiting... command failure: ipset add $ipsetname $ip") && echo "$logtime | $logger | $status | $msg" && exit $?; done
-	read -r status msg <<<$(echo "PASS" "[ $ipsetname ] Resolved & added $ip for $host") && echo "$logtime | $logger | $status $msg"
+	while ! ip=$(resolve_cmd "$host") || [[ -z $ip ]]; do 
+	read -r status msg <<< "ERROR Exiting... command failure: dig +short $host" 
+	echo "$logtime | $logger | $status | $msg" 
+	exit $?
+  done
+	while ! ipsetadd_cmd "$ip"; do 
+	read -r status msg <<< "ERROR Exiting... command failure: ipset add $ipsetname $ip" 
+	echo "$logtime | $logger | $status | $msg" 
+	exit $?
+  done
+	read -r status msg <<< "PASS [ $ipsetname ] Resolved & added $ip for $host" 
+	echo "$logtime | $logger | $status $msg"
 done
 
 # Check current status of the set & start wrapping up unless this final command fails
-read -r status msg <<<$(echo "INFO" "[ $ipsetname ] Confirming post-update status...") && echo "$logtime | $logger | $status $msg"
-while ! result=$(ipsetlist_cmd) || [[ -z result ]]; do read -r status msg <<<$(echo "ERROR" "Exiting... command failure: ipset list $ipsetname") && echo "$logtime | $logger | $status | $msg" && exit $?; done
+read -r status msg <<< "INFO [ $ipsetname ] Confirming post-update status..." 
+echo "$logtime | $logger | $status $msg"
+while ! result=$(ipsetlist_cmd) || [[ -z $result ]]; do 
+  read -r status msg <<< "ERROR Exiting... command failure: ipset list $ipsetname" 
+  echo "$logtime | $logger | $status | $msg" 
+  exit $?
+done
 
 # Little bit of fanciness for better log formatting and we're done
-while IFS= read -r line; do echo "$logtime | $logger | $status \-> $line"; done <<< "$result"
-read -r status msg <<<$(echo "PASS" "[ $ipsetname ] Update confirmed.") && echo -e "$logtime | $logger | $status $msg" && exit $?;
+while IFS= read -r line; do 
+  echo "$logtime | $logger | $status -> $line"
+done <<< "$result"
+read -r status msg <<< "PASS [ $ipsetname ] Update confirmed." 
+echo -e "$logtime | $logger | $status $msg" 
+exit $?;

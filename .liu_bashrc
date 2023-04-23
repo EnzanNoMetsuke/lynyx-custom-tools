@@ -1,0 +1,5 @@
+# Examples shown. Replace with your required values.
+export LIU_IPSET_NAME="my-whitelist"
+export LIU_DOMAIN="dydns.com"
+export LIU_SUB1="alpha"
+export LIU_SUB2="beta"
